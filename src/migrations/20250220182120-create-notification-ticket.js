@@ -28,7 +28,8 @@ module.exports = {
           "PENDING",
           "SUCCESS",
           "FAILED"
-        ]
+        ],
+        defaultValue:"PENDING"
       },
       notificationTime: {
         type: Sequelize.DATE,
