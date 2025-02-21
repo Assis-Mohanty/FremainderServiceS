@@ -12,16 +12,29 @@ const createChannel=async()=>{
 }
 
 const subscribeMessage=async(channel,binding_key,service)=>{
-    const applicationQueue =await channel.assertQueue(QUEUE_NAME);
-    channel.bindQueue(applicationQueue.queue,EXCHANGE_NAME,binding_key);
-    channel.consume(applicationQueue.queue,msg=>{
-        console.log("received data");
-        console.log(msg.connect.toString());
-        channel.ack(msg);
-    })
+    try {
+        const applicationQueue =await channel.assertQueue("QUEUE_NAME");
+        channel.bindQueue(applicationQueue.queue,EXCHANGE_NAME,binding_key);
+        channel.consume(applicationQueue.queue,msg=>{
+            console.log("received data");
+            console.log(msg.connect.toString());
+            channel.ack(msg);
+        })
+    } catch (error) {
+        throw error;
+    }
+}
+const publishMessage=async (channel,binding_key,message)=>{
+    try {
+        await channel.assertQueue(QUEUE_NAME);
+        await channel.publish(EXCHANGE_NAME,binding_key,Buffer.from(message));
+    } catch (error) {
+        throw error
+    }
 }
 
 module.exports={
     subscribeMessage,
-    createChannel
+    createChannel,
+    publishMessage
 }
